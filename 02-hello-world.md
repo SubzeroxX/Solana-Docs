@@ -92,3 +92,5 @@ mod test {
 ```
 
 The run the tests [Hint](01a-programs.md#testing-the-program)
+
+Deploy the program [Hint](01a-programs.md#deploying-the-program)

@@ -47,3 +47,19 @@ cargo add solana-sdk@2.2.0 --dev
 ```sh
 cargo test -- --no-capture
 ```
+
+### Deploying
+
+#### Deploying the program
+
+```sh
+solana program deploy ./target/deploy/{project-name}.so
+```
+
+This will display the Program Id
+
+#### Confirm the deployment
+
+```sh
+solana program show {program-id}
+```
