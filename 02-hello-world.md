@@ -1,96 +1,66 @@
-# 02-Hello-world
+# 02a-Hello-world-native
 
 After that much pain you are here GJ
 
 #### Our first project (hello world)
 
-Create the program called hello-world [Hint](01a-programs.md#creating-program)
+Create the program called hello-world [Hint](01-basic-commands.md#project-creation)
 
-Add the project dependencies [Hint](01a-programs.md#installing-dependencies)
-
-Set up the type of the program [Hint](01a-programs.md#settings-create-type)
-
-Our main focus will be the `./hello-world/src/lib.rs` with the initial program code
+Our main focus will be the `./programs/hello-world/src/lib.rs`
+with the initial program code:
 
 ```rust
-use solana_program::{
-    account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, msg, pubkey::Pubkey,
-};
+use anchor_lang::prelude::*;
 
-entrypoint!(process_instruction);
+declare_id!("BY8LCLmCXe8chKjiP4F8Qeryz7aZ72e6vPz8C7u4HSuh");
 
-pub fn process_instruction(
-    _program_id: &Pubkey,
-    _accounts: &[AccountInfo],
-    _instruction_data: &[u8],
-) -> ProgramResult {
-    msg!("Hello, world!");
-    Ok(())
-}
-```
+#[program]
+pub mod hello_world {
+    use super::*;
 
-Build the program [Hint](01a-programs.md#build-the-program)
-(The first compiles are will be slow due to caching)
-
-This command will create 2 files in `target/deploy` directory called:
-
-- `hello_world.so` - smart contract
-- `hello_world-keypair.json` - programs public key
-
-We can also get the program ID [Hint](01a-programs.md#show-the-program-id)
-
-Setup the packages required for testing [Hint](01a-programs.md#installing-testing-dependecies)
-
-This code will add test to program
-
-```rust
-#[cfg(test)]
-mod test {
-    use litesvm::LiteSVM;
-    use solana_sdk::{
-        instruction::Instruction,
-        message::Message,
-        signature::{Keypair, Signer},
-        transaction::Transaction,
-    };
-
-    #[test]
-    fn test_hello_world() {
-        // Create a new LiteSVM instance
-        let mut svm = LiteSVM::new();
-
-        // Create a keypair for the transaction payer
-        let payer = Keypair::new();
-
-        // Airdrop some lamports to the payer
-        svm.airdrop(&payer.pubkey(), 1_000_000_000).unwrap();
-
-        // Load our program
-        let program_keypair = Keypair::new();
-        let program_id = program_keypair.pubkey();
-        svm.add_program_from_file(program_id, "target/deploy/hello_world.so")
-            .unwrap();
-
-        // Create instruction with no accounts and no data
-        let instruction = Instruction {
-            program_id,
-            accounts: vec![],
-            data: vec![],
-        };
-
-        // Create transaction
-        let message = Message::new(&[instruction], Some(&payer.pubkey()));
-        let transaction = Transaction::new(&[&payer], message, svm.latest_blockhash());
-
-        // Send transaction and verify it succeeds
-        let result = svm.send_transaction(transaction);
-        assert!(result.is_ok(), "Transaction should succeed");
-        let logs = result.unwrap().logs;
-        println!("Logs: {logs:#?}");
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        msg!("Greetings from: {:?}", ctx.program_id);
+        Ok(())
     }
 }
+
+#[derive(Accounts)]
+pub struct Initialize {}
 ```
 
-The run the tests [Hint](01a-programs.md#testing-the-program)
+Build the program [Hint](01-basic-commands.md#building-program)
+(The first compiles are will be slow due to caching)
 
-Deploy the program [Hint](01a-programs.md#deploying-the-program)
+The tests location is `./tests/{test-name}.ts`
+There is a default test case in the `./tests/hello-world.ts`
+with the following code:
+
+```typescript
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { HelloWorld } from "../target/types/hello_world";
+
+describe("hello-world", () => {
+  // Configure the client to use the local cluster.
+  anchor.setProvider(anchor.AnchorProvider.env());
+
+  const program = anchor.workspace.helloWorld as Program<HelloWorld>;
+
+  it("Is initialized!", async () => {
+    // Add your test here.
+    const tx = await program.methods.initialize().rpc();
+    console.log("Your transaction signature", tx);
+  });
+});
+
+```
+
+To run the tests [Hint](01-basic-commands.md#test-program)
+
+If you want to see its output:
+
+1. Start the local validator [Hint](01-basic-commands.md#surfpool-startup)
+2. Start the logging watch for trasactions [Hint](01-basic-commands.md#view-transaction-logs)
+3. Run the tests [Hint](01-basic-commands.md#test-program-with-already-runing-validator)
+
+Deploy the program [Hint](01a-basic-commands-native.md#deploying-the-program)

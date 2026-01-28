@@ -1,4 +1,4 @@
-# 01-Basic-configs
+# 01-Basic-commands aka. anchor
 
 ### NodeJS
 
@@ -14,6 +14,12 @@ npm clean-install
 
 ```sh
 solana config get
+```
+
+### View transaction logs
+
+```sh
+solana logs
 ```
 
 #### Changing networks
@@ -106,7 +112,9 @@ In project's directory
 anchor deploy
 ```
 
-#### Test program
+#### Program testing
+
+##### Test program
 
 In project's directory
 
@@ -114,11 +122,19 @@ In project's directory
 anchor test
 ```
 
+##### Test program with already runing validator
+
+If the local validator is already running use it with `--skip-local-validator` switch
+
+```sh
+anchor test --skip-local-validator
+```
+
 ### Surfpool
 
 #### Surfpool startup
 
-This is our local validator
+This is our local validator (on `anchor test` this will start and stop automatically)
 
 ```sh
 surfpool start
