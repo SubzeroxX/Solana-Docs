@@ -17,6 +17,7 @@ Adding the basic stuffs [Hint](01a-programs.md#settings-create-type)
 First function initialize this will setup our fund account and admin account
 
 For that we create a new data structure for initialization
+We maxed the account number to 50
 
 ```rust
 #[derive(Accounts)]
@@ -37,6 +38,29 @@ pub struct Initialize<'info> {
     // Signer: authentication for transaction (Clicking approve or reject)
     pub system_program: Program<'info, System>,
     // system_program: rights for creating new account and/or transfer Sol
+}
+```
+
+To remove the 50 account limit we have to modify the previously created structor to:
+
+```rust
+#[derive(Accounts)]
+pub struct Fund<'info> {
+    #[account(
+        mut, 
+        seeds = [b"fund_data"],
+        // new code 
+        // the following logic will expand it automatically as it needs
+        bump = fund_data.bump, 
+        realloc = fund_data.to_account_info().data_len() + 40, 
+        realloc::payer = user, 
+        realloc::zero = false,
+    )]
+    pub fund_data: Account<'info, FundData>,
+    
+    #[account(mut)]
+    pub user: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }
 ```
 
