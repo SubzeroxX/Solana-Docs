@@ -189,6 +189,24 @@ pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
 No, we cannot use the fund's function because
 the from account always has to be the signer.
 
+We use basic error messages for reporting errors.
+
+```rs
+#[error_code]
+pub enum FundError {
+    #[msg("You are not authorized to withdraw.")]
+    Unauthorized,
+    #[msg("Cannot withdraw below rent-exempt minimum.")]
+    InsufficientFunds,
+    #[msg("Too few amount to fund!")]
+    TooFewFund,
+    #[msg("Too much amount to fund!")]
+    TooMuchFund,
+    #[msg("Max funder reached!")]
+    MaxFunder
+}
+```
+
 Alternative way, using Program Derived Address (PDA).
 These accounts are owned by the program logic and using math to sign the smart contract
 
