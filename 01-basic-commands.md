@@ -61,14 +61,57 @@ solana balance
 In case if you forgot it you can still view it with this command
 
 ```sh
-solana confirm -v
+solana address
 ```
 
-### Only on devnet
+#### View the deploy fee
 
-#### Request devnet airdrop
+Firstly start the local validator [Hint](#surfpool-startup)
 
-Has rate limitation only and 5 Sol/request
+Compile the program [Hint](#building-program)
+
+View the size of the deploy with:
+
+```sh
+wc -c target/deploy/{project}.so
+```
+
+This will spit out the following output 
+(size of the program and the program name) in the following format:
+`XXXXX target/deploy/{project}.so`
+
+Then for the final estimated fee
+
+```sh
+solana rent {byte lenght}
+```
+
+This could be optimzed
+
+#### Program size optimalization for deploy
+
+
+#### Deploy program to network
+
+Firstly set network [Hint](01-basic-commands.md#changing-networks)
+
+### Only on devnet or testnet
+
+Request airdrop for your network [Hint](01-basic-commands.md#request-devnet-or-testnet-airdrop)
+
+### Every tim needed
+
+Syncing keys for the network [Hint](#syncing-program-id-with-the-network)
+
+To deploy program use:
+
+```sh
+solana program deploy target/deploy/{project}.so --commitment confirmed
+```
+
+#### Request devnet or testnet airdrop
+
+Has rate limitation only and 1.5 or 5 Sol/request
 
 ```sh
 solana airdrop {amount}
@@ -110,6 +153,12 @@ In project's directory
 
 ```sh
 anchor deploy
+```
+
+#### Syncing program ID with the network
+
+```sh
+anchor keys sync
 ```
 
 #### Program testing
