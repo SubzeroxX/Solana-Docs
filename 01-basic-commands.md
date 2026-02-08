@@ -130,7 +130,7 @@ We need the buffer id the program created [Hint](01-basic-commands.md#view-not-f
 Then using the following command we can resume the program upload
 
 ```sh
-solana program deploy --buffer buffer-address target/deploy/unmix.so
+solana program deploy --buffer buffer-address target/deploy/{project}.so
 ```
 
 #### Deploy program to network
@@ -150,13 +150,29 @@ BUFFER ADDRESS | PUBLIC KEY | X.XXX SOL
 
 #### Continue deployment after 'error'
 
+Eg. the deploy timouts with
 
+Silimar message like this:
+
+```
+thread 'main' (22503) panicked at /home/user/agave/cli/src/program.rs:3345:34: 
+Should return a valid tpu client: Custom("Failed find any cluster node info for upcoming leaders, timeout: 20s.") 
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+Get the buffer address of the failed project [Hint](01-basic-commands.md#view-not-finished-program-buffers)
+
+With the following command you can resume its upload
+
+```sh
+solana program deploy --buffer buffer-address target/deploy/{project}.so
+```
 
 ### Only on devnet or testnet
 
 Request airdrop for your network [Hint](01-basic-commands.md#request-devnet-or-testnet-airdrop)
 
-### Every tim needed
+### Every time needed
 
 Syncing keys for the network [Hint](#syncing-program-id-with-the-network)
 
