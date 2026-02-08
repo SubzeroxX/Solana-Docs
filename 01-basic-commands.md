@@ -10,6 +10,40 @@ npm clean-install
 
 ### Solona CLI
 
+#### Using an another wallet for command
+
+We can do it by pointing to a new wallet's keypair by using `--keypair keypair.json` argument
+
+#### Importing an existing
+
+##### Via private key
+
+We can use a python program like the following:
+
+<details>
+<summary>Python code:</summary>
+
+```py
+# Save this as decode.py and run: python decode.py "YOUR_BASE58_PRIVATE_KEY_HERE"
+import base58
+import json
+import sys
+
+if len(sys.argv) < 2:
+    print("Usage: python decode.py 'PRIVATE_KEY_HERE'")
+    sys.exit(1)
+
+privkey_b58 = sys.argv[1]
+decoded = base58.b58decode(privkey_b58)
+# Phantom private keys are 64 bytes (32 seed + 32 pubkey)
+keypair = list(decoded[:32] + decoded[32:])  # but usually just the full 64 for Solana import
+print(json.dumps(keypair))
+```
+
+</details>
+
+Then we save its output keypair into a .json file which will have the wallet's private and public key 
+
 #### Set initial config in Solona CLI
 
 ```sh
@@ -30,6 +64,7 @@ You can choose between:
 - devnet
 - localhost
 - testnet
+- mainnet "https://api.mainnet.solana.com/"
 
 ```sh
 solana config set --url {network}
@@ -90,10 +125,32 @@ This could be optimzed
 
 #### Program size optimalization for deploy
 
+We need the buffer id the program created [Hint](01-basic-commands.md#view-not-finished-program-buffers)
+
+Then using the following command we can resume the program upload
+
+```sh
+solana program deploy --buffer buffer-address target/deploy/unmix.so
+```
 
 #### Deploy program to network
 
 Firstly set network [Hint](01-basic-commands.md#changing-networks)
+
+#### View not finished program buffers
+
+```sh
+solana program show --buffers
+```
+
+This will show a table with the buffer address and the deploy account for that program
+
+Buffer Address | Authority  | Balance
+BUFFER ADDRESS | PUBLIC KEY | X.XXX SOL
+
+#### Continue deployment after 'error'
+
+
 
 ### Only on devnet or testnet
 
