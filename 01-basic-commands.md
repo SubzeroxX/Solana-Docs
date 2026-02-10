@@ -125,13 +125,6 @@ This could be optimzed
 
 #### Program size optimalization for deploy
 
-We need the buffer id the program created [Hint](01-basic-commands.md#view-not-finished-program-buffers)
-
-Then using the following command we can resume the program upload
-
-```sh
-solana program deploy --buffer buffer-address target/deploy/{project}.so
-```
 
 #### Deploy program to network
 
